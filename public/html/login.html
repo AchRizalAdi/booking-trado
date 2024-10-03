@@ -1,0 +1,95 @@
+<div class="login-container">
+    <h2>Login</h2>
+
+    <!-- Login form -->
+    <form ng-submit="login()">
+        <label for="email">Email</label>
+        <input type="email" id="email" ng-model="email" placeholder="Enter your email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" ng-model="password" placeholder="Enter your password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- <p>Don't have an account? <a href="#">Sign up</a></p> -->
+</div>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .login-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .login-container h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+        color: #333;
+    }
+
+    .login-container label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .login-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .login-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #5cb85c;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .login-container button:hover {
+        background-color: #4cae4c;
+    }
+
+    .login-container .error {
+        color: red;
+        margin-bottom: 10px;
+    }
+
+    .login-container p {
+        text-align: center;
+        margin-top: 10px;
+        color: #777;
+    }
+
+    .login-container p a {
+        color: #5cb85c;
+        text-decoration: none;
+    }
+
+    .login-container p a:hover {
+        text-decoration: underline;
+    }
+</style>

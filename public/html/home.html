@@ -1,0 +1,275 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">Booking Trado</a>
+        <div class="ml-auto">
+            <button class="btn btn-danger" ng-click="logout()">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div>
+        <h5 class="mb-4">Trado Watcher</h5>
+        <div class="row">
+            <div class="col-md-4" ng-repeat="t in trados">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ t.name }}</h5>
+                        <p class="card-text">
+                            <strong>Qty:</strong> {{ t.qty }}<br>
+                            <strong>Qty Available:</strong> {{ t.qty_available }}<br>
+                            <strong>Qty On Booking:</strong> {{ t.qty_on_booking }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h1 class="mb-4">Booking Menu</h1>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <p class="text-muted">Manage all your bookings from this menu</p>
+            <button class="btn btn-primary btn-lg" data-toggle="modal" ng-click="addBooking()">
+                <i class="fas fa-plus-circle mr-2"></i> Add Booking
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table id="datatables" class="table table-hover table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Code</th>
+                        <th>Trado</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Status</th>
+                        <th>Qty</th>
+                        <th style="white-space: nowrap;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding Booking -->
+<div class="modal fade" id="addBookingModal" tabindex="-1" role="dialog" aria-labelledby="addBookingModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBookingModalLabel">{{ nameModal }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addBookingForm" ng-submit="submitBooking()">
+                <div class="modal-body">
+                    <div class="form-group required">
+                        <label for="trado">Trado</label>
+                        <select id="trado" class="form-control" ng-model="formData.trado_id" select2 required>
+                            <option value="" disabled selected>Select Trado</option>
+                            <option ng-repeat="s in trados" value="{{s.id}}">{{s.name}} - {{ s.description }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group required">
+                        <label for="checkIn">Check In</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control flatpickr-date" id="checkIn"
+                                    ng-model="formData.form_check_in" placeholder="Pilih tanggal check-in" required>
+                            </div>
+                            <!-- <div class="col-md-6">
+                                <label for="checkInTime">Time In</label>
+                                <input type="text" class="form-control flatpickr-time" id="checkInTime"
+                                    ng-model="formData.form_time_in" placeholder="Pilih waktu check-in" required>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label for="checkOut">Check Out</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control flatpickr-date" id="checkOut"
+                                    ng-model="formData.form_check_out" placeholder="Pilih tanggal check-out" required>
+                            </div>
+                            <!-- <div class="col-md-6">
+                                <label for="checkOutTime">Time Out</label>
+                                <input type="text" class="form-control flatpickr-time" id="checkOutTime"
+                                    ng-model="formData.form_time_out" placeholder="Pilih waktu check-out" required>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label for="qty">Qty</label>
+                        <input type="number" class="form-control" id="qty" ng-model="formData.qty" min="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="saveBooking">Save Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Showing The Detail -->
+<div class="modal fade" id="detailBookingModal" tabindex="-1" role="dialog" aria-labelledby="detailBookingModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailBookingModalLabel">Detail Booking</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <td>Code</td>
+                        <td>{{ detail.code }}</td>
+                    </tr>
+                    <tr>
+                        <td>Trado</td>
+                        <td>{{ detail.trado.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Trado Description</td>
+                        <td>{{ detail.trado.description }}</td>
+                    </tr>
+                    <tr>
+                        <td>Check In</td>
+                        <td>{{ detail.check_in }}</td>
+                    </tr>
+                    <tr>
+                        <td>Check Out</td>
+                        <td>{{ detail.check_out }}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            <span ng-if="detail.status == 'draft'" class="badge badge-secondary">Draft</span>
+                            <span ng-if="detail.status == 'posting'" class="badge badge-primary">Posting</span>
+                            <span ng-if="detail.status == 'rejected'" class="badge badge-danger">Rejected</span>
+                            <span ng-if="detail.status == 'finished'" class="badge badge-success">Finished</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Qty</td>
+                        <td>{{ detail.qty }}</td>
+                    </tr>
+                    <tr>
+                        <td>Created At</td>
+                        <td>{{ detail.created_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Create By</td>
+                        <td>{{ detail.user.name }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button ng-if="detail.status == 'draft'" type="button" class="btn btn-success"
+                    ng-click="postingBooking(detail.id)">Posting</button>
+                <button ng-if="detail.status == 'draft'" type="button" class="btn btn-danger"
+                    ng-click="rejectBooking(detail.id)">Reject</button>
+                <button ng-if="detail.status == 'posting'" type="button" class="btn btn-success"
+                    ng-click="finishBooking(detail.id)">Finish</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* Container styling */
+        .container {
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Heading styling */
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            padding: 30px;
+        }
+
+        /* Table header styling */
+        thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Row hover effect */
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Status cell colors */
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Action button styling */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;
+            }
+
+            button {
+                padding: 6px 10px;
+            }
+        }
+
+        .required label::after {
+            content: "*";
+            color: red;
+        }
+    </style>
