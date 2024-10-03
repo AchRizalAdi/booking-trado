@@ -2,4 +2,10 @@ How to Start
 
 - composer install
 
-- set the env
+- + Create Env
+
+- php artisan key:generate
+
+- php artisan migrate:fresh --seed
+
+- php artisan serve
